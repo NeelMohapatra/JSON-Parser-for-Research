@@ -5,13 +5,14 @@ from pprint import pprint
 JSON_DIR = '/Users/swojit/Downloads/companies'
 files = os.listdir(JSON_DIR)
 errors = []
+keys = []
 for file in files:
     json_file = open(JSON_DIR + '/' + file)
     data = json.load(json_file)
+    keys.extend(data.keys())
     try:
-        print(data['name'])
+        pprint(data)
     except KeyError:
         errors.append(file)
-for file in errors:
-    data = json.load(open(JSON_DIR + '/' + file))
-    pprint(data)
+print(len(files) - len(errors))
+print(set(keys))
