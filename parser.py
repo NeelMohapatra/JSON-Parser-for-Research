@@ -1,4 +1,7 @@
 #! /usr/bin/env python3
+# Goes through each files in the directory and checks for keys.
+# TODO: Accumulate all data in a csv file and make them easier to parse.
+# Might have to figure out connections between companies for more insights
 
 import json, os, csv, re
 from pprint import pprint
@@ -11,8 +14,11 @@ for file in files:
     data = json.load(json_file)
     keys.extend(data.keys())
     try:
-        pprint(data)
+        print()
+        pprint(data['markets'])
     except KeyError:
         errors.append(file)
 print(len(files) - len(errors))
 print(set(keys))
+for error in errors:
+	pprint(error)
