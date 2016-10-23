@@ -32,8 +32,9 @@ for file in working_files:
     row = []
     for key in keys:
         try:
-            row.append(data[key])
+            row.append(file[key])
         except KeyError:
             row.append('NOTHING_HERE')
-    outputWriter.writerow(row)
+    if not file['hidden']:
+       outputWriter.writerow(row)
 outputfile.close()
