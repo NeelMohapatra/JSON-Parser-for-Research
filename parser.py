@@ -9,16 +9,31 @@ JSON_DIR = '/Users/swojit/Downloads/companies'
 files = os.listdir(JSON_DIR)
 errors = []
 keys = []
+working_files = []
 for file in files:
     json_file = open(JSON_DIR + '/' + file)
     data = json.load(json_file)
     keys.extend(data.keys())
     try:
-        print()
-        pprint(data['markets'])
+        working_files.append(data)
+#        print()
+#        pprint(data['markets'])
     except KeyError:
         errors.append(file)
 print(len(files) - len(errors))
-print(set(keys))
+keys = set(keys)
+print(keys)
 for error in errors:
-	pprint(error)
+    pprint(error)
+outputfile = open('output.csv', 'w', newline='')
+outputWriter = csv.writer(outputfile)
+outputWriter.writerow([key for key in keys])
+for file in working_files:
+    row = []
+    for key in keys:
+        try:
+            row.append(data[key])
+        except KeyError:
+            row.append('NOTHING_HERE')
+    outputWriter.writerow(row)
+outputfile.close()
