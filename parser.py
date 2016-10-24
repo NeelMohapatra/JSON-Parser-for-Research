@@ -1,6 +1,5 @@
 #! /usr/bin/env python3
 # Goes through each files in the directory and checks for keys.
-# TODO: Accumulate all data in a csv file and make them easier to parse.
 # Might have to figure out connections between companies for more insights
 
 import json, os, csv, re
@@ -9,25 +8,22 @@ JSON_DIR = '/Users/swojit/Downloads/companies'
 files = os.listdir(JSON_DIR)
 errors = []
 keys = []
+markets = []
 working_files = []
 for file in files:
     json_file = open(JSON_DIR + '/' + file)
     data = json.load(json_file)
     keys.extend(data.keys())
     try:
+        markets.append(data['markets'])
         working_files.append(data)
-#        print()
-#        pprint(data['markets'])
     except KeyError:
         errors.append(file)
-print(len(files) - len(errors))
 keys = set(keys)
-print(keys)
-for error in errors:
-    pprint(error)
+# print(keys)
 outputfile = open('output.csv', 'w', newline='')
 outputWriter = csv.writer(outputfile)
-outputWriter.writerow([key for key in keys])
+outputWriter.writerow([key for key in keys]) # Header
 for file in working_files:
     row = []
     for key in keys:
@@ -37,4 +33,13 @@ for file in working_files:
             row.append('NOTHING_HERE')
     if not file['hidden']:
        outputWriter.writerow(row)
+markets_dict = []
+count = set()
+for market in markets:
+    if len(market):
+        for individual in market:
+            markets_dict.append(individual)
+            count.add(individual['id'])
+print("Number of unique markets: " + str(len(count)))
+print("Number of outgrees: " + str(len(markets_dict)))
 outputfile.close()
